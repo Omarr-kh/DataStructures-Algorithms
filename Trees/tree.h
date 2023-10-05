@@ -176,7 +176,9 @@ void BinarySearchTree<Comparable>::insert(Comparable&& x, BinaryNode*& t)
 }
 
 /**
- * 
+ * remove - removes node x from the trr
+ * x: value of the node to be removed
+ * t: root of the tree
  */
 template<typename Comparable>
 void BinarySearchTree<Comparable>::remove(const Comparable& x, BinaryNode*& t)
@@ -202,4 +204,58 @@ void BinarySearchTree<Comparable>::remove(const Comparable& x, BinaryNode*& t)
         t = (t->right != nullptr) ? t->right : t->left;
         delete currNode;
     }
+}
+
+/**
+* Tree Destructor
+*/
+template<typename Comparable>
+BinarySearchTree<Comparable>::~BinarySearchTree()
+{
+    makeEmpty();
+}
+
+/**
+* makeEmpty - public method to empty the tree
+*/
+template<typename Comparable>
+void BinarySearchTree<Comparable>::makeEmpty()
+{
+    makeEmpty(root);
+}
+
+/**
+* makeEmpty - private method to empty the tree
+*/
+template<typename Comparable>
+void BinarySearchTree<Comparable>::makeEmpty(BinaryNode*& t)
+{
+    if (t != nullptr)
+    {
+        makeEmpty(t->left());
+        makeEmpty(t->right());
+        delete t;
+    }
+    t = nullptr;
+}
+
+/**
+* copy constructor
+*/
+template<typename Comparable>
+BinarySearchTree<Comparable>::BinarySearchTree(const BinarySearchTree& rhs) : root{ nullptr }
+{
+    root = clone(rhs.root);
+}
+
+/**
+* clone - clones a subtree
+*/
+template<typename Comparable>
+BinarySearchTree<Comparable>::BinaryNode* BinarySearchTree<Comparable>::clone(BinaryNode* t) const
+{
+    if (t == nullptr)
+        return nullptr;
+    else
+        return new BinaryNode{ t->element, clone(t->left), clone(t->right) };
 }
